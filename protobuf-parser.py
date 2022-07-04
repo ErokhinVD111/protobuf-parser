@@ -1,8 +1,9 @@
+import sys
+import os
+sys.path.append(os.path.abspath('.'))
 from Modules.google.protobuf.json_format import MessageToJson, ParseDict
 import Modules.Config_pb2 as Config_pb2
 import json
-import sys
-import os
 
 
 class ProtobufParser:
