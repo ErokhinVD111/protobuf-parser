@@ -17,11 +17,11 @@ class ProtobufParser:
     def save_message_as_bin(self, file_name):
         if not os.path.exists(sys.argv[2]):
             os.mkdir(sys.argv[2])
-        with open(f"{sys.argv[2]}/{file_name}", "wb") as f:
+        with open("{}/{}".format(sys.argv[2], file_name), "wb") as f:
             f.write(self.message.SerializePartialToString())
 
     def save_message_as_json(self, file_name):
-        with open(f"./json_files/{file_name}", "w") as f:
+        with open("./json_files/{}".format(file_name), "w") as f:
             json.dump(json.loads(MessageToJson(self.message)), f, indent=4)
 
     def read_json(self):
@@ -41,7 +41,6 @@ class ProtobufParser:
 
 
 if __name__ == "__main__":
-    print(len(sys.argv))
     protobufParser = ProtobufParser(Config_pb2.CfgMsg)
     json_string = protobufParser.read_json()
     v2x_json_string = json_string["tedix-r-sr"]["v2x"]["messages"]
