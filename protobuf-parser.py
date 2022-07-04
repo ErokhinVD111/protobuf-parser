@@ -53,5 +53,5 @@ if __name__ == "__main__":
     for key in delete_keys_list:
         del v2x_json_string[key]
     for key, value in v2x_json_string.items():
-        protobufParser.json_to_message(json_string={"data": {f"{key}": value}})
-        protobufParser.save_message_as_bin(f"{key}")
+        protobufParser.json_to_message(json_string={"data": {"{}".format(key): value}})
+        protobufParser.save_message_as_bin("{}".format(key))
