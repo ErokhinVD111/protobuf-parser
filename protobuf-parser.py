@@ -1,9 +1,9 @@
 import sys
 import os
 from google.protobuf.json_format import MessageToJson, ParseDict
+from google.protobuf.message import DecodeError
 import Config_pb2 as Config_pb2
 import json
-
 
 class ProtobufParser:
     def __init__(self, ProtobufMessage):
@@ -12,7 +12,7 @@ class ProtobufParser:
     def bin_to_message(self, file_name):
         with open(file_name, "rb") as f:
             bin_string = f.read()
-        self.message.ParseFromString(bin_string)
+            self.message.ParseFromString(bin_string)
 
     def save_message_as_bin(self, file_name):
         if not os.path.exists(sys.argv[2]):
@@ -47,5 +47,8 @@ if __name__ == "__main__":
     dirs = os.listdir(path)
     protobufParser = ProtobufParser(Config_pb2.CfgMsg)
     for file in dirs:
-        protobufParser.bin_to_message(path + "/" + file)
-        protobufParser.save_message_as_json(sys.argv[2] + "/" + file)
+        try:
+            protobufParser.bin_to_message(path + "/" + file)
+            protobufParser.save_message_as_json(sys.argv[2] + "/" + file)
+        except DecodeError:
+            print("Can't decode " + file)
