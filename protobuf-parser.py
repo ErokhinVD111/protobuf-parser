@@ -21,7 +21,9 @@ class ProtobufParser:
             f.write(self.message.SerializePartialToString())
 
     def save_message_as_json(self, file_name):
-        with open("./json_files/{}".format(file_name), "w") as f:
+        if not os.path.exists(sys.argv[2]):
+            os.mkdir(sys.argv[2])
+        with open(file_name, "w") as f:
             json.dump(json.loads(MessageToJson(self.message)), f, indent=4)
 
     def read_json(self):
@@ -41,17 +43,9 @@ class ProtobufParser:
 
 
 if __name__ == "__main__":
+    path = sys.argv[1]
+    dirs = os.listdir(path)
     protobufParser = ProtobufParser(Config_pb2.CfgMsg)
-    json_string = protobufParser.read_json()
-    v2x_json_string = json_string["tedix-r-sr"]["v2x"]["messages"]
-    delete_keys_list = [
-        "capture_cache_size",
-        "CAM",
-        "DENM",
-        "MAP"
-    ]
-    for key in delete_keys_list:
-        del v2x_json_string[key]
-    for key, value in v2x_json_string.items():
-        protobufParser.json_to_message(json_string={"data": {"{}".format(key): value}})
-        protobufParser.save_message_as_bin("{}".format(key))
+    for file in dirs:
+        protobufParser.bin_to_message(path + "/" + file)
+        protobufParser.save_message_as_json(sys.argv[2] + "/" + file)
