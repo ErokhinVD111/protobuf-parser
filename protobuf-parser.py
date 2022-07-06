@@ -78,5 +78,7 @@ if __name__ == "__main__":
             main_json["tedix-r-sr"]["v2x"]["messages"][name_layer] = jsons_from_bins[name_layer]
         except KeyError:
             print("key", name_layer, "not found")
+    if not os.path.exists(sys.argv[3]):
+        os.mkdir(sys.argv[3])
     with open(sys.argv[3], "w") as f:
         json.dump(main_json, f, indent=4)
