@@ -80,5 +80,5 @@ if __name__ == "__main__":
             print("key", name_layer, "not found")
     if not os.path.exists(sys.argv[3]):
         os.mkdir(sys.argv[3])
-    with open(sys.argv[3], "w") as f:
+    with open(sys.argv[3] + "/main_config.json", "w") as f:
         json.dump(main_json, f, indent=4)
