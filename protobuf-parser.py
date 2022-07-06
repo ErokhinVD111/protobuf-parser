@@ -99,11 +99,9 @@ if __name__ == "__main__":
             del v2x_json_string[key]
         for key, value in v2x_json_string.items():
             protobufParser.json_to_message(json_string={"data": {"{}".format(key): value}})
-            protobufParser.save_message_as_bin(sys.argv[3], key)
+            protobufParser.save_message_as_bin(sys.argv[3], "{}LayerCfg".format(key))
 
     elif sys.argv[1] == "-h":
-        print("""
-            Mode:
-            "b2j" (binaries to json) how to use: python3 [script.py] b2j [path to binaries files] [path to *.json] [out path]
-            "j2b" (json to binaries) how to use: python3 [script.py] j2b [path to *json] [out path]
-            """)
+        print("Mode:")
+        print("b2j (binaries to json) how to use: python3 [script.py] b2j [path to binaries files] [path to *.json] [out path]")
+        print("j2b (json to binaries) how to use: python3 [script.py] j2b [path to *json] [out path]")
