@@ -44,14 +44,9 @@ class ProtobufParser:
 
 
 if __name__ == "__main__":
-    mode = input("""
-    "b2j" (binaries to json) how to use: python3 b2j [path to binaries files] [path to *.json] [out path]
-    "j2b" (json to binaries) how to use: python3 j2b [path to *json] [out path]
-    mode:
-    """)
-    if mode == "b2j":
+    if sys.argv[1] == "b2j":
         # path to bin files
-        path = sys.argv[1]
+        path = sys.argv[2]
         dirs = os.listdir(path)
 
         # object for parsing
@@ -79,20 +74,20 @@ if __name__ == "__main__":
 
         # replace main_json
         protobufParser = ProtobufParser(Config_pb2.CfgMsg)
-        main_json = protobufParser.read_json(sys.argv[2])
+        main_json = protobufParser.read_json(sys.argv[3])
         for name_layer in names_layers:
             try:
                 main_json["tedix-r-sr"]["v2x"]["messages"][name_layer] = jsons_from_bins[name_layer]
             except KeyError:
                 print("key", name_layer, "not found")
-        if not os.path.exists(sys.argv[3]):
-            os.mkdir(sys.argv[3])
-        with open(sys.argv[3] + "/main_config.json", "w") as f:
+        if not os.path.exists(sys.argv[4]):
+            os.mkdir(sys.argv[4])
+        with open(sys.argv[4] + "/main_config.json", "w") as f:
             json.dump(main_json, f, indent=4)
 
-    elif mode == "j2b":
+    elif sys.argv[1] == "j2b":
         protobufParser = ProtobufParser(Config_pb2.CfgMsg)
-        json_string = protobufParser.read_json(sys.argv[1])
+        json_string = protobufParser.read_json(sys.argv[2])
         v2x_json_string = json_string["tedix-r-sr"]["v2x"]["messages"]
         delete_keys_list = [
             "capture_cache_size",
@@ -104,4 +99,11 @@ if __name__ == "__main__":
             del v2x_json_string[key]
         for key, value in v2x_json_string.items():
             protobufParser.json_to_message(json_string={"data": {"{}".format(key): value}})
-            protobufParser.save_message_as_bin(sys.argv[2], key)
+            protobufParser.save_message_as_bin(sys.argv[3], key)
+
+    elif sys.argv[1] == "-h":
+        print("""
+            Mode:
+            "b2j" (binaries to json) how to use: python3 [script.py] b2j [path to binaries files] [path to *.json] [out path]
+            "j2b" (json to binaries) how to use: python3 [script.py] j2b [path to *json] [out path]
+            """)
